@@ -3,12 +3,18 @@
 # The site at https://hexember.github.io/active-browser/ is README.md (served as
 # index.html) plus the four root docs it links to: CONTRIBUTING.md, SECURITY.md,
 # CODE_OF_CONDUCT.md and CHANGELOG.md, each rendered to <NAME>.html, plus the
-# theme's own assets/css/... files. That set is an allowlist. _config.yml's
-# exclude: keeps everything else out of the Jekyll source, and the "Published set
-# is exactly the allowlist" step below fails the build, so nothing is uploaded,
-# if anything else ends up in _site. Jekyll copies every non-Markdown file it is
+# theme's own assets/css/... files, plus the README showcase video and its
+# poster, media/showcase.mp4 and media/showcase-poster.jpg. That set is an
+# allowlist. _config.yml's exclude: keeps everything else out of the Jekyll
+# source, and the "Published set is exactly the allowlist" step below fails the
+# build, so nothing is uploaded, if anything else ends up in _site. Jekyll copies every non-Markdown file it is
 # not told to exclude verbatim, which is how the old site came to serve a copy
 # of install.sh.
+#
+# README.md contains one {% comment %} ... {% endcomment %} block: a poster
+# image linked to the site, shown only on github.com, which strips <video>.
+# Liquid removes that block from the site, and check 5 below fails the build if
+# the fallback, a second <video>, or any Liquid text reaches index.html.
 #
 # install.sh must never be served from Pages. The only install URL is
 # raw.githubusercontent.com/hexember/active-browser/main/install.sh. A second
@@ -45,6 +51,7 @@ on:
       - CODE_OF_CONDUCT.md
       - CHANGELOG.md
       - _config.yml
+      - media/**
       - .github/workflows/pages.yml
   pull_request:
     paths:
@@ -54,6 +61,7 @@ on:
       - CODE_OF_CONDUCT.md
       - CHANGELOG.md
       - _config.yml
+      - media/**
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -89,6 +97,7 @@ jobs:
           extra=$(cd _site && find . -type f | sed 's|^\./||' | sort \
             | grep -vE '^(index|CONTRIBUTING|SECURITY|CODE_OF_CONDUCT|CHANGELOG)\.html$' \
             | grep -vE '^README\.html$' \
+            | grep -vE '^media/(showcase\.mp4|showcase-poster\.jpg)$' \
             | grep -vE '^assets/(css|js|images|fonts)/' || true)
           if [ -n "$extra" ]; then
             echo "::error::files outside the published allowlist (add to _config.yml exclude:, or to this allowlist and paths:)"
@@ -100,6 +109,12 @@ jobs:
           for f in index CONTRIBUTING SECURITY CODE_OF_CONDUCT CHANGELOG; do
             if [ ! -s "_site/$f.html" ]; then
               echo "::error::_site/$f.html is missing or empty"
+              fail=1
+            fi
+          done
+          for f in media/showcase.mp4 media/showcase-poster.jpg; do
+            if [ ! -s "_site/$f" ]; then
+              echo "::error::_site/$f is missing or empty"
               fail=1
             fi
           done
@@ -115,6 +130,30 @@ jobs:
           # 4. Warning only: a missing button must not block replacing a stale site.
           if [ -f _site/index.html ] && ! grep -q 'View on GitHub' _site/index.html; then
             echo "::warning::index.html has no 'View on GitHub' button"
+          fi
+
+          # 5. The showcase video is on the site, and README's github.com-only
+          #    fallback (the Liquid comment block) is not.
+          if [ -f _site/index.html ]; then
+            # "|| true": with pipefail, grep finding no <video> would abort the
+            # script here, before the error below is printed.
+            videos=$({ grep -o '<video' _site/index.html || true; } | wc -l | tr -d ' ')
+            if [ "$videos" != 1 ]; then
+              echo "::error::index.html has $videos <video> elements; expected exactly 1"
+              fail=1
+            fi
+            if ! grep -qF 'src="media/showcase.mp4"' _site/index.html; then
+              echo "::error::index.html has no <video> with src=\"media/showcase.mp4\""
+              fail=1
+            fi
+            if grep -qE '<img[^>]*showcase-poster' _site/index.html; then
+              echo "::error::index.html contains the github.com-only poster fallback <img>; the Liquid comment did not strip it"
+              fail=1
+            fi
+            if grep -qE '\{%|\{\{|comment %\}' _site/index.html; then
+              echo "::error::index.html contains unrendered Liquid text ({%, {{ or comment %})"
+              fail=1
+            fi
           fi
 
           if [ "$fail" -ne 0 ]; then exit 1; fi

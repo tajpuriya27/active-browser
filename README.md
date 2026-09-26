@@ -16,6 +16,14 @@ Testing in Brave     →  click a link in Slack  →  opens in Brave
 
 That's the whole idea. ActiveBrowser never becomes the thing that displays a page; it receives the URL, decides which real browser should get it, hands it over, and gets out of the way.
 
+<video src="media/showcase.mp4" poster="media/showcase-poster.jpg" width="1280" height="720" style="width:100%;height:auto" autoplay muted loop playsinline controls preload="auto" aria-label="A chat link opens in Arc while you work in Arc; after you switch to Brave, the next link opens in Brave, demo video">
+  <a href="media/showcase.mp4">Watch the 30-second demo (MP4)</a>
+</video>
+
+<!-- {% comment %} -->
+[![A chat link opens in Arc while you work in Arc; after you switch to Brave, the next link opens in Brave, demo video](media/showcase-poster.jpg)](https://hexember.github.io/active-browser/)
+<!-- {% endcomment %} -->
+
 **Contents:** [Why](#why-this-exists) · [Install](#install) · [Using it](#using-it) · [Privacy](#privacy) · [Limitations](#known-limitations) · [Uninstall](#uninstall) · [Contributing](#contributing) · [Source on GitHub](https://github.com/hexember/active-browser)
 
 ---

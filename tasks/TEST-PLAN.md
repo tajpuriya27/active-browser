@@ -324,6 +324,20 @@ https://github.com/hexember/active-browser/pull/24
 
 ---
 
+## PR #32 — Task 19: Showcase video on the README and Pages site (`chore/showcase-video`, base `main`)
+
+**Preconditions:** the PR-time Jekyll build already passed (run 36261053487) and its artifact contains the video, so these steps check only the deploy, the live site in real browsers, and the github.com fallback.
+
+| # | Action | Expected |
+|---|---|---|
+| 1 | Merge this PR. Actions → **pages** → the run for the merge commit. | `build` passes, including "Published set is exactly the allowlist", and `deploy` succeeds with the `github-pages` URL. |
+| 2 | About 2 minutes later, open https://hexember.github.io/active-browser/ (hard refresh) in **Safari**, then in **Chrome**. Also run `curl -sI https://hexember.github.io/active-browser/media/showcase.mp4 \| grep -i '^content-type'`. | In both browsers the video sits between the "That's the whole idea" paragraph and the Contents line, spans the text column at 16:9, and **starts playing by itself, silently**. It **loops** back to the start after about 31 s, the controls can pause it, and the poster shows before playback. There is no poster image duplicated below the video, and no stray `{%` text. The header is `content-type: video/mp4`. (If Safari is in Low Power Mode, autoplay may be blocked and the poster plus play button shows. That's expected; turn Low Power Mode off and retest.) |
+| 3 | On github.com, open the README on branch `chore/showcase-video` (before merge) or on `main` (after merge), and click the image under "That's the whole idea." | The poster image shows in the same place, with no empty gap or raw `{% comment %}` text around it. Clicking it opens the project website. (Before merge, the site does not have the video yet.) |
+
+**Reset after this block:** none. The Pages deploy is the intended change.
+
+---
+
 # Final teardown — run this only when you are finished with everything above
 
 Order matters; doing it out of order lets the login item come back.
