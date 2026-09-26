@@ -153,5 +153,7 @@ Failures: none
 
 **Note 2026-09-26 (main session, at user request after PR open):** dropped `assets/tools/showcase.swift` and every change that only served it. The `assets/README.md` "Showcase video" section and table row, the `_config.yml` comment edit, and the `showcase.swift` entries in `Project.md` (§3 row 19 and the §4 tree) are all reverted. The video is a finished file in `media/`, and the render script is kept outside the repo. Test step 7 (the script run) no longer applies. Steps 1–6 and 8–10 are unaffected, because they test only `media/`, `README.md` and `pages.yml`.
 
+**Note 2026-09-26 (main session, at user request):** dropped the `CHANGELOG.md` entry. The change is to the project site, not the app, so it does not belong in the user-facing change log.
+
 ## Next
 <what unblocks or follows this task>

@@ -11,10 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A 30-second showcase video at the top of the README. It autoplays on the
-  [project website](https://hexember.github.io/active-browser/); on github.com the README
-  shows its poster, linking to the site.
-
 
 ## [1.0.0] - 2026-09-23
 
