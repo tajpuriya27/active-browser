@@ -92,7 +92,7 @@ One PR per task; a task never spans phases. Suggested split (the planner may spl
 | 09 | 6 | `make release`, `install.sh` | one-liner installs from a local zip |
 | 10 | 6 | `.github/workflows/release.yml` | tag builds and publishes assets |
 | 18 | 6 | .github/workflows/pages.yml, _config.yml | pages workflow green; site shows README, no install.sh |
-| 19 | 6 | media/, README.md, .github/workflows/pages.yml, assets/tools/showcase.swift | site autoplays showcase video; github.com shows poster |
+| 19 | 6 | media/, README.md, .github/workflows/pages.yml | site autoplays showcase video; github.com shows poster |
 
 
 ### Phase 1 — Core (`Core/`)
@@ -228,8 +228,7 @@ active-browser/
 │   ├── menubar/MenuBarIconTemplate{,@2x,@3x}.png
 │   ├── icon.svg, menubar-icon.svg   # sources of truth for both marks
 │   ├── icon-1024.png, README.md     # flat preview; regeneration recipe
-│   ├── tools/render.swift           # AppKit-only SVG→PNG rasteriser, never compiled
-│   └── tools/showcase.swift         # AVFoundation showcase-video renderer, never compiled
+│   └── tools/render.swift           # AppKit-only SVG→PNG rasteriser, never compiled
 ├── Support/
 │   └── Info.plist
 └── Sources/

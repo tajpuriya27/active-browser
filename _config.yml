@@ -1,6 +1,6 @@
 # GitHub Pages (Jekyll) config. The site is README.md plus the root docs it
-# links to, and the showcase video in media/; see .github/workflows/pages.yml.
-# Every non-Markdown file not listed under exclude is published verbatim.
+# links to; see .github/workflows/pages.yml. Every non-Markdown file not listed
+# under exclude is published verbatim.
 
 title: "ActiveBrowser"
 description: "A macOS menu bar agent that opens every link in the browser you were just using."

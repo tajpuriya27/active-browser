@@ -10,7 +10,6 @@ Source of truth is SVG; the binary formats below are generated from it.
 | `menubar-icon.svg` | Menu bar glyph, 18×18pt, black + alpha (template image) |
 | `menubar/MenuBarIconTemplate{,@2x,@3x}.png` | Generated menu bar images |
 | `tools/render.swift` | AppKit-only SVG→PNG rasteriser (no third-party deps) |
-| `tools/showcase.swift` | AppKit + AVFoundation renderer for the README showcase video (`media/`); never compiled |
 
 ## Regenerating
 
@@ -27,39 +26,6 @@ swift tools/render.swift menubar-icon.svg menubar/MenuBarIconTemplate.png 18
 swift tools/render.swift menubar-icon.svg menubar/MenuBarIconTemplate@2x.png 36
 swift tools/render.swift menubar-icon.svg menubar/MenuBarIconTemplate@3x.png 54
 ```
-
-## Showcase video
-
-`media/showcase.mp4` (1280×720, H.264, faststart) and its poster `media/showcase-poster.jpg`
-(1280×720 JPEG) are the video embedded at the top of `README.md`. Regenerate them with these
-commands, run from the repo root. `<scratchpad>` is any scratch directory outside the repo;
-never commit intermediate renders.
-
-```sh
-OUT_SCALE=0.6666667 BITRATE=1400000 swift assets/tools/showcase.swift "$PWD" <scratchpad>/showcase.mp4 <scratchpad>/poster.png
-sips -Z 1280 <scratchpad>/poster.png --out <scratchpad>/poster-720.png
-sips -s format jpeg -s formatOptions 85 <scratchpad>/poster-720.png --out media/showcase-poster.jpg
-cp <scratchpad>/showcase.mp4 media/showcase.mp4
-```
-
-The script always writes the poster at 1920×1080; the two `sips` calls scale it to 1280×720
-and encode it as JPEG at quality 85. Keep them as two calls: that is how the shipped poster
-was made, and it reproduces it byte for byte. A single
-`sips -Z 1280 -s format jpeg -s formatOptions 85` call also gives a 1280×720 JPEG, but its
-bytes differ slightly. The mp4 is not byte-reproducible (the encoder varies between runs),
-but it comes out at about the same size.
-
-To check a frame without encoding, pass timestamps in seconds after the poster path and set
-`PREVIEW_ONLY=1`. The script then writes `<poster>-<seconds>.png` next to the poster and exits.
-A full render takes well under a minute.
-
-The Arc, Brave and Safari icons come from the local `/Applications`, so on a machine without
-Arc or Brave installed the video renders generic app icons instead. Render only on a machine
-that has all three.
-
-`media/` is published by the Pages site. Adding or renaming a file there also needs the
-allowlist (and its presence check) in `.github/workflows/pages.yml` updated, or the site
-build fails.
 
 ## Design
 
